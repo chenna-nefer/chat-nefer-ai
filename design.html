@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glassmorphism UI</title>
+<style>
+  /* Base styles */
+  body {
+    font-family: 'Arial', sans-serif;
+    /* background: linear-gradient(135deg, #738BD7 0%, #BFBBE9 100%); */
+    background-color: #8EC5FC;
+    background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Glassmorphism style for the container and tasks */
+  .glass, .task {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  /* Container for all elements */
+  .container {
+    padding: 20px;
+    width: 300px; /* Adjust as needed */
+  }
+
+  /* Style for input */
+  .task-input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 10px;
+  }
+
+  /* Style for tasks */
+  .task {
+    padding: 10px;
+    margin-bottom: 10px;
+    color: black; /* Change text color as needed */
+  }
+</style>
+</head>
+<body>
+  <div class="container glass">
+    <!-- Input for new tasks -->
+    <input type="text" class="task-input" placeholder="Enter a task">
+
+    <!-- List of tasks or notifications -->
+    <div class="task glass">Task 1</div>
+    <div class="task glass">Task 2</div>
+    <div class="task glass">Task 3</div>
+    <!-- Add more tasks as needed -->
+  </div>
+</body>
+</html>
