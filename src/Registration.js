@@ -12,11 +12,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
-
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { registerUser } from "./app/store";
-import { APP_URL } from "./constants";
+import { registerUser } from "./app/store.js";
+import { APP_URL } from "./constants.js";
 const questions = [
   "What is your name?",
   "What is your email?",
