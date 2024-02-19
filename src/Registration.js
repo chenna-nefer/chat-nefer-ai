@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Box,
@@ -8,180 +8,315 @@ import {
   IconButton,
   VStack,
   Text,
-  Spacer,
   useToast,
 } from "@chakra-ui/react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
-import axios from "axios";
 import { useDispatch } from "react-redux";
-import { registerUser } from "./app/store.js";
+import { registerUser, setBinanceKeys } from "./app/store.js";
 import { APP_URL } from "./constants.js";
-const questions = [
-  "What is your name?",
-  "What is your email?",
-  "Choose a password",
-  "Confirm your password",
-];
 
 const ChatRegistration = () => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [userResponse, setUserResponse] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [messages, setMessages] = useState([
-    { type: "question", text: questions[0] },
+  const [steps, setSteps] = useState([
+    { key: "name", question: "What is your name?", type: "text" },
+    { key: "email", question: "What is your email?", type: "email" },
+    { key: "password", question: "Choose a password", type: "password" },
+    {
+      key: "confirmPassword",
+      question: "Confirm your password",
+      type: "password",
+    },
   ]);
+
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [userResponses, setUserResponses] = useState({});
+  const [userResponse, setUserResponse] = useState("");
+
+  const [messages, setMessages] = useState([
+    { type: "question", text: steps[0].question, key: steps[0].key },
+  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
   const dispatch = useDispatch();
 
-  const [registrationData, setRegistrationData] = useState({
-    yourname: "",
-    email: "",
-    password: "",
-    password2: "",
-  });
+  const addStep = (step) => {
+    setSteps((prevSteps) => [...prevSteps, step]);
+  };
 
-  const toast = useToast();
-
-  useEffect(() => {
-    if (currentStep > 0) {
-      setMessages((msgs) => [
-        ...msgs,
-        { type: "question", text: questions[currentStep] },
-      ]);
-    }
-  }, [currentStep]);
-
-  const handleResponse = async () => {
-    // Basic validation before proceeding
-    if (userResponse.trim() === "") {
+  const handleResponse = async (response) => {
+    setIsLoading(true);
+    const currentStep = steps[currentStepIndex];
+    // General validation for empty response
+    if (response.trim() === "") {
       toast({
         title: "Validation Error",
         description: "This field cannot be empty.",
         status: "error",
-        duration: 9000,
+        duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return; // Stop the function if validation fails
     }
 
-    if (currentStep === 0 && userResponse.length < 2) {
-      // Name validation
+    // Specific validations based on the step type or key
+    if (currentStep.key === "name" && response.length < 2) {
       toast({
         title: "Validation Error",
         description: "Name must be at least 2 characters long.",
         status: "error",
-        duration: 9000,
+        duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
-    if (currentStep === 1 && !/\S+@\S+\.\S+/.test(userResponse)) {
-      // Email validation
+    if (currentStep.key === "email" && !/\S+@\S+\.\S+/.test(response)) {
       toast({
         title: "Validation Error",
         description: "Please enter a valid email address.",
         status: "error",
-        duration: 9000,
+        duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
-    if (currentStep === 2 && userResponse.length < 6) {
-      // Password validation
+    if (
+      (currentStep.key === "password" ||
+        currentStep.key === "confirmPassword") &&
+      response.length < 6
+    ) {
       toast({
         title: "Validation Error",
         description: "Password must be at least 6 characters long.",
         status: "error",
-        duration: 9000,
+        duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
-    // Assuming the confirmPassword step is immediately after the password step
-    // No need for a separate check here as it's handled below with the password mismatch check
+    setUserResponses((prevResponses) => ({
+      ...prevResponses,
+      [currentStep.key]: response,
+    }));
 
-    setMessages((msgs) => [...msgs, { type: "answer", text: userResponse }]);
+    setMessages((msgs) => [
+      ...msgs,
+      { type: "answer", text: response, key: currentStep.key },
+    ]);
 
-    // Update registration data based on the step
-    const newData = { ...registrationData };
-    if (currentStep === 0) newData.yourname = userResponse;
-    if (currentStep === 1) newData.email = userResponse;
-    if (currentStep === 2) newData.password = userResponse;
-    if (currentStep === 3) newData.password2 = userResponse;
-    setRegistrationData(newData);
+    if (currentStep.key === "confirmPassword") {
+      // Trigger registration API call
+      try {
+        const payload = {
+          yourname: userResponses.name,
+          password: userResponses.password,
+          email: userResponses.email,
+          confirmPassword: response, // Include this line if you explicitly need confirmPassword in your payload
+        };
 
-    if (currentStep === questions.length - 1) {
-      if (newData.password !== newData.password2) {
+        const registrationResponse = await fetch(`${APP_URL}/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await registrationResponse.json();
+        if (!registrationResponse.ok)
+          throw new Error(data.message || "Registration failed");
+
+        localStorage.setItem("token", data.token);
+        dispatch(registerUser(data.user));
+
         toast({
-          title: "Password mismatch",
-          description: "Your passwords do not match. Please try again.",
-          status: "error",
-          duration: 9000,
+          title: "Registration Successful",
+          description: "Please verify your email with the OTP sent.",
+          status: "success",
           isClosable: true,
         });
-        setCurrentStep(2); // Go back to password step
-        setMessages((msgs) => msgs.slice(0, -2)); // Remove last question and answer
+
+        // Add OTP step dynamically
+        addStep({
+          key: "otp",
+          question: "Enter the OTP sent to your email",
+          type: "otp",
+        });
+        // Move to the OTP step
+        setCurrentStepIndex(currentStepIndex + 1);
+        setMessages((msgs) => [
+          ...msgs,
+          {
+            type: "question",
+            text: "Enter the OTP sent to your email",
+            key: "otp",
+          },
+        ]);
+      } catch (error) {
+        toast({
+          title: "Registration Failed",
+          description: error.message,
+          status: "error",
+          isClosable: true,
+        });
+        setIsLoading(false);
         return;
       }
-
+    } else if (currentStep.key === "otp") {
+      // Handle OTP verification
+      const token = localStorage.getItem("token"); // Retrieve the token stored during registration
       try {
-        fetch(APP_URL + "register", {
+        const otpResponse = await fetch(`${APP_URL}/verify`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "x-access-token": token,
           },
-          body: JSON.stringify(newData),
-        })
-          .then((res) => res.json())
-          .then((response) => {
-            console.log("response", response);
-            if (response.token) {
-              localStorage.setItem("token", response.token);
-              setIsLoading(false);
-              toast({
-                title: "Registration successful",
-                description: "You are now registered and can continue to chat.",
-                status: "success",
-                duration: 3000,
-                isClosable: true,
-              });
-              setTimeout(() => {
-                dispatch(registerUser());
-              }, 1000);
-              // handleMiddleWareLogin(response.token);
-            } else {
-              setError(response.message);
-              setIsLoading(false);
-            }
-          })
-          .catch((e) => {
-            console.log(e);
-            setError("something went wrong! please try later");
-            setIsLoading(false);
+          body: JSON.stringify({ confirmationcode: response }), // Correctly use userResponse
+        });
+        const data = await otpResponse.json();
+        console.log("data:", data);
+        if (data.success) {
+          toast({
+            title: "Success",
+            description: "OTP verified successfully.",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
           });
+          // Dynamically add Binance API key steps
+          const newSteps = [
+            {
+              key: "binanceApiKey",
+              question: "Enter your Binance API key",
+              type: "text",
+            },
+            {
+              key: "binanceSecretKey",
+              question: "Enter your Binance Secret key",
+              type: "password",
+            },
+          ];
 
-        // Clear registration data or redirect user
+          setSteps((prevSteps) => [...prevSteps, ...newSteps]);
+          // Move to the next step, which is binanceApiKey
+          const nextStepIndex = currentStepIndex + 1;
+          setCurrentStepIndex(nextStepIndex);
+          setMessages((msgs) => [
+            ...msgs,
+            {
+              type: "question",
+              text: newSteps[0].question,
+              key: newSteps[0].key,
+            },
+          ]);
+        } else {
+          toast({
+            title: "Verification failed",
+            description: data.message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
       } catch (error) {
         toast({
-          title: "Registration failed",
-          description: "Something went wrong.",
+          title: "An error occurred",
+          description: "Unable to verify OTP.",
           status: "error",
-          duration: 9000,
+          duration: 3000,
           isClosable: true,
         });
+      } finally {
+        setIsLoading(false);
       }
-    } else {
-      setCurrentStep(currentStep + 1);
+    } else if (currentStep.key === "binanceApiKey") {
+      // Just collect the API key and move to the secret key step
+      // No submission to backend yet
+      setCurrentStepIndex(currentStepIndex + 1); // Move to the secret key input
+    } else if (currentStep.key === "binanceSecretKey") {
+      // Final step: Submit Binance keys,
+      // Now that both keys are presumably collected, submit them
+      const { binanceApiKey, binanceSecretKey } = userResponses; // Ensure these are being correctly assigned in userResponses
+      const payload = {
+        apikey: userResponses.binanceApiKey,
+        secretkey: response,
+      };
+      const token = localStorage.getItem("token"); // Use the stored token for authorization
+      try {
+        const binanceResponse = await fetch(`${APP_URL}/binance`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
+          body: JSON.stringify(payload),
+        });
+        const data = await binanceResponse.json();
+        if (data.success) {
+          dispatch(setBinanceKeys({ binanceKeys: true })); // Update Redux store with Binance keys
+          toast({
+            title: "Binance Keys Saved",
+            description:
+              "Your Binance API and Secret keys have been successfully saved.",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+          // Proceed to the next step or finalize the registration process
+        } else {
+          toast({
+            title: "Saving failed",
+            description: data.message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      } catch (error) {
+        toast({
+          title: "An error occurred",
+          description: "Unable to save Binance keys.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
-    setUserResponse(""); // Clear response input
+
+    // Prepare for next question or completion
+
+    if (currentStepIndex < steps.length - 1) {
+      const nextStep = steps[currentStepIndex + 1];
+      setMessages((msgs) => [
+        ...msgs,
+        { type: "question", text: nextStep.question, key: nextStep.key }, // Use nextStep.key
+      ]);
+      setCurrentStepIndex(currentStepIndex + 1);
+    } else {
+      // All dynamic steps including OTP and Binance keys have been completed
+      toast({
+        title: "All Set!",
+        description: "Your registration and setup are complete.",
+        status: "success",
+        isClosable: true,
+      });
+    }
+    setIsLoading(false);
+    setUserResponse(""); // Clear the input field
+  };
+
+  const handleSubmit = () => {
+    const currentStep = steps[currentStepIndex];
+    handleResponse(userResponse);
   };
 
   return (
-    <Flex direction="column" h="95vh" p={2} bg="cream" borderRadius={"20px"}>
-      {/* Heading and context */}
+    <Flex direction="column" h="95vh" p={2} bg="cream" borderRadius="20px">
       <VStack spacing={4} mb={2}>
         <Text fontSize="2xl" fontWeight="bold" textAlign="center">
           nefer.ai
@@ -192,44 +327,60 @@ const ChatRegistration = () => {
         </Text>
       </VStack>
 
-      {/* Spacer to push everything else to the bottom */}
-      {/* <Spacer /> */}
-
       {/* Message list */}
       <VStack spacing={4} overflowY="auto" flex="1">
-        {messages.map((msg, index) => (
-          <Box
-            p={2}
-            bg={msg.type === "question" ? "white" : "#718096"}
-            borderRadius={"10px"}
-            key={index}
-            color={msg.type === "answer" && "white"}
-            fontWeight={"bold"}
-            alignSelf={msg.type === "question" ? "flex-start" : "flex-end"}
-          >
-            <Text>{msg.text}</Text>
-          </Box>
-        ))}
+        {messages.map((msg, index) => {
+          // Determine if the message text should be masked
+          const shouldMask =
+            msg.type === "answer" &&
+            (msg.key === "password" ||
+              msg.key === "confirmPassword" ||
+              msg.key === "binanceSecretKey");
+          const displayText = shouldMask ? "******" : msg.text;
+
+          return (
+            <Box
+              p={2}
+              bg={msg.type === "question" ? "white" : "#718096"}
+              borderRadius="10px"
+              key={index}
+              color={msg.type === "answer" ? "white" : "black"}
+              fontWeight="bold"
+              alignSelf={msg.type === "question" ? "flex-start" : "flex-end"}
+            >
+              <Text>{displayText}</Text>
+            </Box>
+          );
+        })}
       </VStack>
 
       {/* Input box always at the bottom */}
-      {currentStep < questions.length && (
-        <InputGroup mt={4} bg={"white"} borderRadius={"10px"} mr={0}>
+      {currentStepIndex < steps.length && (
+        <InputGroup mt={4} bg="white" borderRadius="10px">
           <Input
             value={userResponse}
             onChange={(e) => setUserResponse(e.target.value)}
-            placeholder="Your answer..."
-            onKeyDown={(e) => e.key === "Enter" && handleResponse()}
-            boxShadow="base" // Apply a shadow effect to the input
+            placeholder={steps[currentStepIndex].question}
+            onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSubmit()}
+            boxShadow="base"
+            disabled={isLoading} // Disable input when loading
+            type={
+              steps[currentStepIndex].type === "password" ||
+              steps[currentStepIndex].key === "binanceSecretKey"
+                ? "password"
+                : "text"
+            }
           />
           <InputRightElement width=".5rem">
             <IconButton
               aria-label="Send message"
-              bg={"gray.500"}
               icon={<ArrowRightIcon />}
               h="1.75rem"
               size="sm"
-              onClick={handleResponse}
+              onClick={handleSubmit}
+              isLoading={isLoading} // Show loading indicator
+              disabled={isLoading} // Disable button when loading
+              bg="gray.500"
             />
           </InputRightElement>
         </InputGroup>

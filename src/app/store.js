@@ -1,14 +1,18 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 
+// Initialize localStorage for first-time visit
+if (localStorage.getItem("isRegistered") === null) {
+  localStorage.setItem("isRegistered", false);
+}
+
+if (localStorage.getItem("binancekeys") === null) {
+  localStorage.setItem("binancekeys", false);
+}
+
 // Define initial state
 const initialState = {
-  isRegistered: false,
-  binanceApiKey: localStorage.getItem("binanceApiKey")
-    ? atob(localStorage.getItem("binanceApiKey"))
-    : "",
-  binanceSecretKey: localStorage.getItem("binanceSecretKey")
-    ? atob(localStorage.getItem("binanceSecretKey"))
-    : "",
+  isRegistered: localStorage.getItem("isRegistered") === "true",
+  binancekeys: localStorage.getItem("binancekeys") === "true",
 };
 
 // Create slice for registration
@@ -19,15 +23,13 @@ const registrationSlice = createSlice({
     // Action to set registration status
     registerUser: (state) => {
       state.isRegistered = true;
+      localStorage.setItem("isRegistered", true);
     },
-    // Action to set Binance API keys
-    setBinanceKeys: (state, action) => {
-      const encodedApiKey = btoa(action.payload.apiKey);
-      const encodedSecretKey = btoa(action.payload.secretKey);
-      state.binanceApiKey = encodedApiKey;
-      state.binanceSecretKey = encodedSecretKey;
-      localStorage.setItem("binanceApiKey", encodedApiKey);
-      localStorage.setItem("binanceSecretKey", encodedSecretKey);
+
+    // Action to set Binance API keys status
+    setBinanceKeys: (state) => {
+      state.binancekeys = true;
+      localStorage.setItem("binancekeys", true);
     },
   },
 });

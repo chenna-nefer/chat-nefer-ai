@@ -7,15 +7,14 @@ import ChatRegistration from "./Registration.js";
 import { useSelector } from "react-redux";
 
 function App() {
-  const isRegistered = useSelector((state) => state.registration.isRegistered);
-
+  const binancekeys = useSelector((state) => state.registration.binancekeys);
   return (
     <Box
       p={5}
       w="100%"
       h="100vh"
       bg="cream"
-      display="flex" // Make the Box a flex containe r
+      display="flex" // Make the Box a flex container
       justifyContent="center" // Horizontally center the content
       alignItems="center" // Vertically center the content (if the Box has a specific height)
       // If you uncomment the height, the alignItems property will vertically center the content within that height
@@ -29,8 +28,8 @@ function App() {
     >
       <Box width="60%" textAlign="center">
         {/* Adjust this Box to control the width and centering of the content */}
-        {!isRegistered && <ChatRegistration />}
-        {isRegistered && <ChatPage />}
+        {!binancekeys && <ChatRegistration />}
+        {binancekeys && <ChatPage />}
       </Box>
     </Box>
   );
