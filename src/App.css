@@ -1,3 +1,354 @@
+/* @font-face {
+  font-family: "neue-haas-grotesk-text", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://use.typekit.net/soh7cnz.css?family=neue-haas-grotesk-display:400");
+} */
+
+@font-face {
+  font-family: "CircularStd-Bold", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  font-style: bold;
+  font-weight: 700;
+  src: url("./fonts/CircularStd-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "CircularStd-Book", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/CircularStd-Book.ttf") format("truetype");
+}
+@font-face {
+  font-family: "CircularStd-Medium", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+  font-style: medium;
+  font-weight: 500;
+  src: url("./fonts/CircularStd-Medium.ttf") format("truetype");
+}
+
+.App {
+  font-family: "CircularStd-Bold";
+  text-align: center;
+  color: white;
+}
+html {
+  font-family: "CircularStd-Bold";
+  background: #000000;
+  color: white;
+}
+
+body {
+  font-family: "CircularStd-Bold";
+  background: #000000;
+  color: white;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.flex-component {
+  display: flex;
+  /* Other common flex properties */
+}
+
+@media screen and (min-width: 1400px) {
+  .flex-component {
+    flex-direction: row;
+    /* Additional styles for larger screens */
+  }
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 600px) {
+  .flex-component {
+    flex-direction: column;
+    /* Additional styles for mobile devices */
+  }
+}
+
+/* Default styles for grid component */
+.grid-component {
+  /* display: grid; */
+  /* Other common grid properties */
+}
+
+/* Media query for screens with width greater than 1400px */
+@media screen and (min-width: 1400px) {
+  .grid-component {
+    grid-template-columns: repeat(2, 1fr);
+    /* Additional styles for larger screens */
+  }
+}
+
+/* Media query for screens with width between 768px and 1399px */
+@media screen and (min-width: 768px) and (max-width: 1399px) {
+  .grid-component {
+    grid-template-columns: repeat(2, 1fr);
+    /* Additional styles for medium-sized screens */
+  }
+}
+
+/* Media query for mobile devices with width up to 767px */
+@media screen and (max-width: 767px) {
+  .grid-component {
+    grid-template-columns: 1fr;
+    /* Additional styles for mobile devices */
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .css-8hva4x {
+    background-color: #000000 !important;
+  }
+  .chakra-modal__content {
+    background-color: #000000;
+  }
+}
+
+.changebackground {
+  background: #000000;
+}
+
+.App-header {
+  background: #000000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.somegoodcard {
+  border-radius: 2px;
+  border-image: linear-gradient(
+      125.46deg,
+      #ffffff -2.09%,
+      #bb62f1 19.09%,
+      #ee4b60 59.1%,
+      #fbbd15 114.49%,
+      #ffffff 114.87%
+    ),
+    1px solid #000;
+}
+
+.goal-card {
+  min-width: 250px;
+  /* background: #242731; */
+  padding: 20px;
+  /* Set the size and type of border you want */
+  /* Set the border radius */
+  /* Create a pseudo-element to hold the linear gradient */
+  position: relative;
+  overflow: hidden;
+  background: #000000;
+  border-radius: 20px;
+  /* Optionally, you can adjust the spacing of the gradient within the border */
+}
+
+.goal-card-module {
+  padding: 2px;
+  color: white;
+  /* border-width: 3px; */
+  /* border-style: solid; */
+  border-image: linear-gradient(
+    125.46deg,
+    #ffffff -2.09%,
+    #bb62f1 19.09%,
+    #ee4b60 59.1%,
+    #fbbd15 114.49%,
+    #ffffff 114.87%
+  );
+  border: -1px solid;
+}
+
+.gradient-border {
+  border: 1px solid transparent;
+  background: linear-gradient(
+    125.46deg,
+    #ffffff -2.09%,
+    #bb62f1 19.09%,
+    #ee4b60 59.1%,
+    #fbbd15 114.49%,
+    #ffffff 114.87%
+  ) !important;
+  border-radius: 20px;
+}
+
+.initial-input-border {
+  background: linear-gradient(
+    125.46deg,
+    #ffffff -2.09%,
+    #bb62f1 19.09%,
+    #ee4b60 59.1%,
+    #fbbd15 114.49%,
+    #ffffff 114.87%
+  );
+  border-color: white;
+}
+
+.initial-input-border:focus,
+.initial-input-border:not(:placeholder-shown) {
+  border-color: unset;
+}
+
+.portfolio-graph {
+  background: #000000;
+  border-radius: 20px;
+  padding: 20px;
+}
+.assets-table {
+  background: #000000;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+/* .goal-card::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  z-index: -1;
+  background: linear-gradient(
+    100.46deg,
+    #ffffff -2.09%,
+    #bb62f1 19.09%,
+    #ee4b60 59.1%,
+    #fbbd15 114.49%,
+    #ffffff 114.87%
+  );
+  border-radius: 20px;
+  pointer-events: none;
+} */
+
+.goal-coin-card {
+  min-width: 200px;
+  background: #000000;
+  border-radius: 20px;
+  padding: 20px;
+}
+.goal-badge-text {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 24px;
+  /* identical to box height, or 200% */
+
+  text-align: center;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+
+  /* Common/White/100p */
+
+  color: #ffffff;
+}
+
+.goal-name {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height, or 125% */
+
+  /* State/Bold (White) */
+
+  color: #ffffff;
+}
+
+.App-link {
+  color: #61dafb;
+}
+.custom-file-upload {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.coin-chart {
+  max-width: 50%;
+  width: 50%;
+}
+.coin-graph-container {
+  /* width: 75%; */
+  display: flex;
+  padding: 40px;
+  margin-top: 25px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+.float {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 40px;
+  right: 40px;
+  background-color: #0c9;
+  color: #fff;
+  border-radius: 50px;
+  text-align: center;
+  box-shadow: 2px 2px 3px #999;
+}
+
+.gradientText {
+  /* background: linear-gradient(
+    125.46deg,
+    #ffffff -2.09%,
+    #bb62f1 19.09%,
+    #ee4b60 59.1%,
+    #fbbd15 114.49%,
+    #ffffff 114.87%
+  ); */
+  background: linear-gradient(180deg, #ff01c7 0%, #de7801 50.52%, #ad00ff 100%);
+  border: none;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media only screen and (max-width: 600px) {
+  .coin-chart {
+    min-width: 100%;
+  }
+}
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes blink {
+  from,
+  to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.cursor {
+  animation: blink 1s step-start infinite;
+}
+
 .chat-container {
   display: flex;
   flex-direction: column;
