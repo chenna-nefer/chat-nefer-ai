@@ -10,7 +10,7 @@ if (localStorage.getItem("binancekeys") === null) {
 }
 
 if (localStorage.getItem("currentComponent") === null) {
-  localStorage.setItem("currentComponent", "provideKeys");
+  localStorage.setItem("currentComponent", "login");
 }
 // Define initial state
 const initialState = {
@@ -45,7 +45,7 @@ const registrationSlice = createSlice({
     },
     navigateToProvideKeys: (state) => {
       state.currentComponent = "provideKeys";
-      localStorage.setItem("currentComponent", "provideKeys");
+      localStorage.setItem("currentComponent", "login");
     },
     // Add a reducer to handle navigation to the login component
     navigateToLogin: (state) => {

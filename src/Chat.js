@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   Input,
@@ -17,6 +17,26 @@ const ChatPage = () => {
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    // const newSocket = io("http://localhost:5001", {
+    //   transports: ["websocket"],
+    // });
+    // newSocket.on("chat_response", (data) => {
+    //   console.log("Received chat response:", data);
+    //   // Handle the received data, for example, by updating the chat messages state
+    //   setMessages((prevMessages) => [
+    //     ...prevMessages,
+    //     { text: data.data, sender: "response" },
+    //   ]);
+    // });
+    // setSocket(newSocket);
+    // return () => {
+    //   newSocket.close();
+    // };
+  }, []);
+
   const handleSendMessage = () => {
     if (!newMessage.trim()) return; // Prevent sending empty messages
 
@@ -34,6 +54,26 @@ const ChatPage = () => {
       setIsLoading(false);
     }, 50);
   };
+
+  // const sendMessage = () => {
+  //   if (!newMessage.trim()) return;
+
+  //   const userMessage = { text: newMessage.trim(), sender: "user" };
+  //   setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+  //   // Emit a chat_message event to the server with the new message
+  //   socket.emit("chat_message", userMessage);
+
+  //   setNewMessage("");
+  // };
+
+  // const handleKeyDown = (event) => {
+  //   if (event.key === "Enter") {
+  //     event.preventDefault(); // Prevent form submission or newline in textarea
+  //     sendMessage();
+  //   }
+  // };
+
   const handleResponse = async () => {
     // Check for empty userResponse
     if (!newMessage.trim()) {
@@ -46,8 +86,7 @@ const ChatPage = () => {
     const userMessage = { text: newMessage.trim(), sender: "user" };
 
     try {
-      const response = await fetch("http://localhost:5001/api/chat", {
-        // Use the full URL here
+      const response = await fetch("https://chat.nefer.ai/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,8 +101,9 @@ const ChatPage = () => {
       const data = await response.json();
       // Assuming `data.response` is the text response from the chatbot
       // Create a message object for the chatbot's response
+      // console.log("data: ", data);
       const responseMessage = {
-        text: data.response.trim(),
+        text: data.data.trim(),
         sender: "response",
       };
 
@@ -99,7 +139,7 @@ const ChatPage = () => {
       <VStack
         spacing={4}
         w="full"
-        maxW="md"
+        maxW="700px"
         mb={4}
         overflowY="auto"
         height="lg"
@@ -110,7 +150,7 @@ const ChatPage = () => {
             key={index}
             alignSelf={message.sender === "user" ? "flex-end" : "flex-start"}
             bg={message.sender === "user" ? "#718096" : "white"}
-            color={message.sender === "user" && "white"}
+            color={message.sender === "user" ? "white" : "black"}
             p={3}
             fontWeight={"bold"}
             borderRadius="lg"
@@ -120,7 +160,7 @@ const ChatPage = () => {
         ))}
       </VStack>
       {isLoading && <Text>Loading...</Text>}
-      <Flex w="full" maxW="md">
+      <Flex w="full" maxW="700px">
         <InputGroup mt={4} bg={"white"} borderRadius={"10px"}>
           <Input
             value={newMessage}

@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import neferlogo from "./assets/img/neferlogo.png";
 import { navigateToLogin, navigateToRegister } from "./app/store.js";
 import Apikeys from "./components/apikeys.js";
+// import SignUp from "./auth/signup.js";
 
 const LandingPage = () => {
   // This is a placeholder. You might use Redux state or another method to switch between components

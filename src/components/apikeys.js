@@ -164,7 +164,7 @@ const Apikeys = () => {
   return (
     // <SidebarWithHeader>
     <Grid
-      gridTemplateColumns={"1fr 1fr"}
+      // gridTemplateColumns={"1fr 1fr"}
       mt={4}
       p={4}
       pt={0}
@@ -184,14 +184,14 @@ const Apikeys = () => {
           className="gradient-border"
           style={{
             borderRadius: "24px",
-            width: "max-content",
-            marginLeft: "3em",
+            width: "fit-content",
+            // marginLeft: "3em",
             alignSelf: "flex-start",
           }}
         >
           <Flex
             direction="column"
-            w="fit-content"
+            w="max-content"
             background="transparent"
             borderRadius="24px"
             px={[4, 10]}
@@ -210,7 +210,7 @@ const Apikeys = () => {
               width={"auto"}
               mb={5}
               color={"#F3BA2F"}
-              px={16}
+              px={4}
             >
               <Image
                 src={binance_logo}
@@ -221,7 +221,7 @@ const Apikeys = () => {
                 height={"52px"}
               />{" "}
               <Text fontSize={"3xl"} color={"#F3BA2F"}>
-                Binance Connection{" "}
+                Connect Binance{" "}
               </Text>
             </Flex>
 
