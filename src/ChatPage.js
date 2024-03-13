@@ -29,7 +29,7 @@ const ChatMessage = ({ isUser, message }) => {
       <Stack
         direction="row"
         align="flex-start"
-        spacing={4}
+        spacing={2}
         width="-webkit-fill-available"
       >
         {isUser ? (
@@ -48,9 +48,9 @@ const ChatMessage = ({ isUser, message }) => {
         <chakra.div
           bg={isUser ? "none" : "#FFFFFF"}
           color="#1B2559"
-          p={3}
-          fontSize={"16px"}
-          fontWeight={"600"}
+          p={[2, 2, 3, 3]}
+          fontSize={isUser ? ["15px", "16px"] : ["14px", "15px"]}
+          fontWeight={isUser ? ["500", "600"] : ["400", "500"]}
           borderRadius="lg"
           width={"-webkit-fill-available"}
           maxWidth="100%" // Prevents the message from stretching too long
@@ -166,9 +166,9 @@ const ChatPage = () => {
         zIndex="sticky"
       >
         <Flex alignItems="center">
-          <Image src={neferlogo} w={"40px"} />
+          <Image src={neferlogo} w={["36px", "38px", "40px"]} />
           <Text
-            fontSize={"36px"}
+            fontSize={["30px", "32px", "36px"]}
             fontWeight={"700"}
             lineHeight={"43px"}
             textAlign={"left"}
@@ -183,9 +183,16 @@ const ChatPage = () => {
         flex="1"
         overflowY="auto"
         p="4"
-        width={"80%"}
+        width={["100%", "100%", "80%", "60%"]}
         spacing="4"
         bg="#DFDFDF"
+        css={{
+          "&::-webkit-scrollbar": {
+            display: "none", // Hide scrollbar for Chrome, Safari, and Opera
+          },
+          scrollbarWidth: "none", // Hide scrollbar for Firefox
+          msOverflowStyle: "none", // Hide scrollbar for IE and Edge
+        }}
       >
         {messages.map((msg, index) => (
           <ChatMessage
@@ -216,7 +223,7 @@ const ChatPage = () => {
         bottom="0"
         bg="#DFDFDF"
         zIndex="sticky"
-        width={"80%"}
+        width={["100%", "100%", "80%", "60%"]}
       >
         <Flex>
           <Input
@@ -227,7 +234,7 @@ const ChatPage = () => {
             onKeyDown={handleKeyDown}
             h="54px"
             flex="1" // Makes the input field take up the maximum available space
-            minW="250px"
+            minW="200px"
             borderRadius="45px"
             border="1px solid #7E7E7E"
             padding="18px 20px 22px"
