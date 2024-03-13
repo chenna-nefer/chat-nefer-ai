@@ -128,11 +128,7 @@ const ChatPage = () => {
       };
 
       // Update state with both the user's and chatbot's messages
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        userMessage,
-        responseMessage,
-      ]);
+      setMessages((prevMessages) => [...prevMessages, responseMessage]);
       setIsLoading(false);
     } catch (error) {
       console.error("Error during fetch:", error);
@@ -153,8 +149,15 @@ const ChatPage = () => {
   };
 
   return (
-    <Flex direction="column" h="100vh" bg="#DFDFDF">
+    <Flex
+      direction="column"
+      h="100vh"
+      bg="#DFDFDF"
+      //   justifyContent={"center"}
+      alignItems={"center"}
+    >
       <Box
+        alignSelf={"flex-start"}
         p="4"
         // bg="blue.500"
         color="#000000"
@@ -180,7 +183,7 @@ const ChatPage = () => {
         flex="1"
         overflowY="auto"
         p="4"
-        width={"100%"}
+        width={"80%"}
         spacing="4"
         bg="#DFDFDF"
       >
@@ -207,7 +210,14 @@ const ChatPage = () => {
         <div ref={bottomRef} />
       </VStack>
 
-      <Box p="4" position="sticky" bottom="0" bg="#DFDFDF" zIndex="sticky">
+      <Box
+        p="4"
+        position="sticky"
+        bottom="0"
+        bg="#DFDFDF"
+        zIndex="sticky"
+        width={"80%"}
+      >
         <Flex>
           <Input
             placeholder="Type your message here..."
