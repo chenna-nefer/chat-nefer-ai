@@ -28,11 +28,29 @@ const ChatMessage = ({ isUser, message }) => {
     <HStack justifyContent={"flex-start"} width="100%">
       <Stack
         direction="row"
-        align="flex-start"
+        // align={isUser ? "flex-start" : "flex-end"}
+        justifyContent={isUser ? "flex-end" : "flex-start"}
         spacing={2}
         width="-webkit-fill-available"
       >
-        {isUser ? (
+        {!isUser && (
+          <Image src={neferchaticon} size="sm" w={"40px"} height={"40px"} />
+        )}
+        <chakra.div
+          bg={isUser ? "none" : "#FFFFFF"}
+          color="#1B2559"
+          p={[2, 2, 3, 3]}
+          fontSize={isUser ? ["15px", "16px"] : ["14px", "15px"]}
+          fontWeight={isUser ? ["500", "600"] : ["400", "500"]}
+          borderRadius="lg"
+          width={"fit-content"}
+          maxWidth="100%" // Prevents the message from stretching too long
+          border={isUser ? "1px solid #7E7E7E" : "none"}
+          textAlign={"left"} // Aligns text based on the sender
+        >
+          {message}
+        </chakra.div>
+        {isUser && (
           <Avatar
             width={"40px"}
             height={"40px"}
@@ -42,23 +60,7 @@ const ChatMessage = ({ isUser, message }) => {
             fontWeight={"700"}
             color="#000000"
           />
-        ) : (
-          <Image src={neferchaticon} size="sm" w={"40px"} />
         )}
-        <chakra.div
-          bg={isUser ? "none" : "#FFFFFF"}
-          color="#1B2559"
-          p={[2, 2, 3, 3]}
-          fontSize={isUser ? ["15px", "16px"] : ["14px", "15px"]}
-          fontWeight={isUser ? ["500", "600"] : ["400", "500"]}
-          borderRadius="lg"
-          width={"-webkit-fill-available"}
-          maxWidth="100%" // Prevents the message from stretching too long
-          border={isUser ? "1px solid #7E7E7E" : "none"}
-          textAlign={"left"} // Aligns text based on the sender
-        >
-          {message}
-        </chakra.div>
       </Stack>
     </HStack>
   );
@@ -183,7 +185,7 @@ const ChatPage = () => {
         flex="1"
         overflowY="auto"
         p="4"
-        width={["100%", "100%", "80%", "60%"]}
+        width={["100%", "100%", "80%", "55%"]}
         spacing="4"
         bg="#DFDFDF"
         css={{
@@ -223,7 +225,7 @@ const ChatPage = () => {
         bottom="0"
         bg="#DFDFDF"
         zIndex="sticky"
-        width={["100%", "100%", "80%", "60%"]}
+        width={["100%", "100%", "80%", "55%"]}
       >
         <Flex>
           <Input
