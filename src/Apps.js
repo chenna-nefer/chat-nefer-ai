@@ -12,7 +12,7 @@ function App() {
     <Box
       p={5}
       w="100%"
-      h="100vh"
+      // h="100vh"
       bg="cream"
       display="flex" // Make the Box a flex container
       justifyContent="center" // Horizontally center the content

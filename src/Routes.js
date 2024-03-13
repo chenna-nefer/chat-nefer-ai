@@ -14,8 +14,10 @@ import {
   SkeletonText,
 } from "@chakra-ui/react";
 import LandingPage from "./LandingPage.js";
-import ChatPage from "./Chat.js";
+import Chat from "./Chat.js";
 import Apikeys from "./components/apikeys.js";
+import ChatPage from "./ChatPage.js";
+
 // import Loader from "shareComponent/Loader";
 // import ProtectedRoutes from "routes/ProtectedRoutes"; //Authenticated routes
 // import PublicRoute from "routes/PublicRoute";
@@ -128,6 +130,14 @@ const App = () => {
             element={
               <PublicRoute>
                 <ChatPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/chat-page"
+            element={
+              <PublicRoute>
+                <Chat />
               </PublicRoute>
             }
           />
