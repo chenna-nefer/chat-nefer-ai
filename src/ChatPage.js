@@ -123,7 +123,7 @@ const ChatPage = () => {
       const data = await response.json();
 
       const responseMessage = {
-        text: newMessage.trim(),
+        text: data.data.trim(),
         sender: "response",
       };
 
