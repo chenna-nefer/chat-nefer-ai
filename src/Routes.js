@@ -17,6 +17,7 @@ import LandingPage from "./LandingPage.js";
 import Chat from "./Chat.js";
 import Apikeys from "./components/apikeys.js";
 import ChatPage from "./ChatPage.js";
+import PersonalChat from "./personalchat.js";
 
 // import Loader from "shareComponent/Loader";
 // import ProtectedRoutes from "routes/ProtectedRoutes"; //Authenticated routes
@@ -133,6 +134,15 @@ const App = () => {
               </PublicRoute>
             }
           />
+          <Route
+            path="/p/chat"
+            element={
+              <PublicRoute>
+                <PersonalChat />
+              </PublicRoute>
+            }
+          />
+
           <Route
             path="/chat-page"
             element={
